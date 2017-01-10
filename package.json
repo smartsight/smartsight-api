@@ -1,0 +1,22 @@
+{
+  "name": "smartsight-api",
+  "version": "0.0.1",
+  "description": "Server for the SmartSight app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "lint": "./node_modules/.bin/standard"
+  },
+  "repository": "francoischalifour/smartsight-api",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/francoischalifour/smartsight-api/issues"
+  },
+  "homepage": "https://github.com/francoischalifour/smartsight-api#readme",
+  "dependencies": {
+    "koa": "^1.2.4"
+  },
+  "devDependencies": {
+    "standard": "^8.6.0"
+  }
+}
