@@ -2,9 +2,9 @@
   "name": "smartsight-api",
   "version": "0.0.1",
   "description": "Server for the SmartSight app",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index",
+    "start": "node server",
     "lint": "./node_modules/.bin/standard"
   },
   "repository": "francoischalifour/smartsight-api",
