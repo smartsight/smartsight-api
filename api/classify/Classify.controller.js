@@ -39,12 +39,13 @@ module.exports = dependencies => {
         }
         const pyshell = new PythonShell('engine/classify.py', options)
 
-        yield new Promise((resolve, reject) => {
-          pyshell
-            .on('error', reject)
-            .on('message', resolve)
-        })
-        .then(data => {
+        try {
+          const data = yield new Promise((resolve, reject) => {
+            pyshell
+              .on('error', reject)
+              .on('message', resolve)
+          })
+
           const result = {
             meta: {
               type: 'success',
@@ -54,13 +55,12 @@ module.exports = dependencies => {
           }
 
           answer(result)
-        })
-        .catch(e => {
+        } catch (e) {
           const code = 500
           const message = e.message
 
           abort(code, createError({ code, message }))
-        })
+        }
       } catch (e) {
         const code = 405
         const message = `No file specified (expect ${AUTHORIZED_FORMATS.join(', ')})`
