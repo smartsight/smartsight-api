@@ -21,11 +21,11 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 
 * Install: `npm install`
 * Run: `npm start`
-* Browse: [http://localhost:3000](http://localhost:3000)
+* Listening on: [http://localhost:3000](http://localhost:3000)
 
 ## Developers
 
-* Dev: `npm run dev`
+* Watch: `npm run dev`
 * Test: `npm test`
 
 ## License
