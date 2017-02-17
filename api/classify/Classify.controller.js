@@ -1,8 +1,11 @@
 const { v4: uuid } = require('node-uuid')
+const PythonShell = require('python-shell')
 
-const AUTHORIZED_FORMATS = ['png', 'jpg', 'jpeg', 'bmp']
+const { createError } = require('../utils')
 
-module.exports = function (dependencies) {
+const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
+
+module.exports = dependencies => {
   const { fs, os, path } = dependencies
 
   return {
@@ -12,36 +15,57 @@ module.exports = function (dependencies) {
 
       try {
         let part
+        let stream
 
         while ((part = yield parts)) {
           const { mime } = part
           const [, format] = mime.split('/')
 
           if (!AUTHORIZED_FORMATS.includes(format)) {
-            abort(415, `Unsupported Media Type (${AUTHORIZED_FORMATS.join(', ')})`)
-            return
+            const code = 415
+            const message = `Unsupported Media Type (${AUTHORIZED_FORMATS.join(', ')})`
+
+            abort(code, createError({ code, message }))
           }
 
-          const stream = fs.createWriteStream(path.join(os.tmpdir(), uuid()))
+          stream = fs.createWriteStream(path.join(os.tmpdir(), uuid()))
 
           part.pipe(stream)
         }
 
-        // TODO(@francoischalifour): add Python script call
-        // with stream.path as input
+        const options = {
+          pythonPath: '/usr/local/bin/python3',
+          args: ['--image_file', stream.path]
+        }
+        const pyshell = new PythonShell('engine/classify.py', options)
 
-        const result = [{
-          class: 'pizza',
-          confidence: 0.97
-        }, {
-          class: 'plate',
-          confidence: 0.76
-        }]
+        yield new Promise((resolve, reject) => {
+          pyshell
+            .on('error', reject)
+            .on('message', resolve)
+        })
+        .then(data => {
+          const result = {
+            meta: {
+              type: 'success',
+              code: 200
+            },
+            data
+          }
 
-        answer(JSON.stringify(result))
+          answer(result)
+        })
+        .catch(e => {
+          const code = 500
+          const message = e.message
+
+          abort(code, createError({ code, message }))
+        })
       } catch (e) {
-        console.log(e.message)
-        abort(405, e.message)
+        const code = 405
+        const message = `No file specified (expect ${AUTHORIZED_FORMATS.join(', ')})`
+
+        abort(code, createError({ code, message }))
       }
     }
   }

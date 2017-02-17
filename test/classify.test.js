@@ -4,59 +4,55 @@ const request = require('supertest-koa-agent')
 const app = require('../app')
 
 const api = request(app)
+const endpoint = '/classify'
 
-test('POST /classify with JPG image', t => {
+test(`POST ${endpoint} with JPG image`, t => {
   api
-    .post('/classify')
+    .post(endpoint)
     .attach('file', 'test/fixture/pizza.jpg')
     .expect(200)
 })
 
-test('POST /classify with PNG image', t => {
+test(`POST ${endpoint} with wrong format returns 415`, t => {
   api
-    .post('/classify')
+    .post(endpoint)
     .attach('file', 'test/fixture/pizza.png')
-    .expect(200)
-})
-
-test('POST /classify with wrong format returns 415', t => {
-  api
-    .post('/classify')
-    .attach('file', 'README.md')
     .expect(415)
 })
 
-test.cb('POST /classify returns valid JSON schema', t => {
+test.cb(`POST ${endpoint} returns valid JSON schema`, t => {
   api
-    .post('/classify')
+    .post(endpoint)
     .attach('file', 'test/fixture/pizza.jpg')
     .end((err, res) => {
       if (err) {
         throw err
       }
 
-      JSON.parse(res.text).forEach(classification => {
-        expect(classification).to.include.keys('class', 'confidence')
-        expect(classification.confidence).to.be.within(0, 1)
+      const { meta, data } = JSON.parse(res.text)
+
+      expect(meta).to.include.keys('type', 'code')
+
+      JSON.parse(data).forEach(classification => {
+        expect(classification).to.include.keys('class', 'score')
       })
 
       t.end()
     })
 })
 
-test.cb('POST /classify returns a valid classification', t => {
+test.cb(`POST ${endpoint} wrong format returns valid error JSON schema`, t => {
   api
-    .post('/classify')
-    .attach('file', 'test/fixture/pizza.jpg')
+    .post(endpoint)
+    .attach('file', 'test/fixture/pizza.png')
     .end((err, res) => {
       if (err) {
         throw err
       }
 
-      const classification = JSON.parse(res.text)[0]
+      const { error } = JSON.parse(res.text)
 
-      expect(classification.class).to.equal('pizza')
-      expect(classification.confidence).to.be.above(0.5)
+      expect(error).to.include.keys('code', 'message')
 
       t.end()
     })
