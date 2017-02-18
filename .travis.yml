@@ -12,6 +12,7 @@ before_install:
   - npm install --global npm
 install:
   - sudo pip install -r engine/requirements.txt
+  - npm install
 before_script:
   - npm prune
 script:
