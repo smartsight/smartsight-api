@@ -6,18 +6,32 @@ const app = require('../app')
 const api = request(app)
 const endpoint = '/classify'
 
-test(`POST ${endpoint} with JPG image`, t => {
+test.cb(`POST ${endpoint} with JPG image`, t => {
   api
     .post(endpoint)
     .attach('file', 'test/fixture/pizza.jpg')
     .expect(200)
+    .end((err, res) => {
+      if (err) {
+        throw err
+      }
+
+      t.end()
+    })
 })
 
-test(`POST ${endpoint} with wrong format returns 415`, t => {
+test.cb(`POST ${endpoint} with wrong image format returns 415`, t => {
   api
     .post(endpoint)
     .attach('file', 'test/fixture/pizza.png')
     .expect(415)
+    .end((err, res) => {
+      if (err) {
+        throw err
+      }
+
+      t.end()
+    })
 })
 
 test.cb(`POST ${endpoint} returns valid JSON schema`, t => {

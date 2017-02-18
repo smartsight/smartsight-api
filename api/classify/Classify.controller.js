@@ -42,31 +42,24 @@ module.exports = dependencies => {
         }
         const pyshell = new PythonShell('engine/classify.py', options)
 
-        try {
-          const data = yield new Promise((resolve, reject) => {
-            pyshell
-              .on('error', reject)
-              .on('message', resolve)
-          })
+        const data = yield new Promise((resolve, reject) => {
+          pyshell
+            .on('error', reject)
+            .on('message', resolve)
+        })
 
-          const result = {
-            meta: {
-              type: 'success',
-              code: 200
-            },
-            data
-          }
-
-          answer(result)
-        } catch (e) {
-          const code = 500
-          const message = e.message
-
-          abort(code, createError({ code, message }))
+        const result = {
+          meta: {
+            type: 'success',
+            code: 200
+          },
+          data
         }
+
+        answer(result)
       } catch (e) {
-        const code = 405
-        const message = `No file specified (expect ${AUTHORIZED_FORMATS.join(', ')})`
+        const code = 400
+        const message = `Bad request (expected format: ${AUTHORIZED_FORMATS.join(', ')})`
 
         abort(code, createError({ code, message }))
       }
