@@ -19,8 +19,12 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 
 ## Getting started
 
-* Install: `npm install`
-* Run: `npm start`
+* Clone the repo and its submodule: `git clone --recursive https://github.com/smartsight/smartsight-api.git`
+* [Install Python 3](https://www.python.org/downloads/)
+* Install Python requirements: `pip install -r engine/requirements.txt`
+* Set your Python 3 path to run the classification script with the correct interpreter: `export PYTHONPATH=$(which python3)`
+* Install Node dependencies: `npm install`
+* Run the server: `npm start`
 * Listening on: [http://localhost:3000](http://localhost:3000)
 
 ## Developers
