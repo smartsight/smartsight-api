@@ -36,27 +36,37 @@ module.exports = dependencies => {
           part.pipe(stream)
         }
 
-        const options = {
-          pythonPath,
-          args: ['--image_file', stream.path]
+        try {
+          const options = {
+            pythonPath,
+            args: ['--image_file', stream.path]
+          }
+          const pyshell = new PythonShell('engine/classify.py', options)
+
+          const data = yield new Promise((resolve, reject) => {
+            pyshell
+              .on('error', reject)
+              .on('message', resolve)
+          })
+
+          const result = {
+            meta: {
+              type: 'success',
+              code: 200
+            },
+            data
+          }
+
+          answer(result)
+        } catch (e) {
+          // Unable to process the classification
+          //  - cannot run the script
+          //  - might be a corrupted file
+          const code = 415
+          const message = `Unsupported Media Type (${AUTHORIZED_FORMATS.join(', ')})`
+
+          abort(code, createError({ code, message }))
         }
-        const pyshell = new PythonShell('engine/classify.py', options)
-
-        const data = yield new Promise((resolve, reject) => {
-          pyshell
-            .on('error', reject)
-            .on('message', resolve)
-        })
-
-        const result = {
-          meta: {
-            type: 'success',
-            code: 200
-          },
-          data
-        }
-
-        answer(result)
       } catch (e) {
         const code = 400
         const message = `Bad request (expected format: ${AUTHORIZED_FORMATS.join(', ')})`
