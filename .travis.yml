@@ -1,12 +1,23 @@
 language: node_js
 node_js:
-  - '7'
-  - '6'
+  - 7
+  - 6
 cache:
   directories:
     - $HOME/.npm
     - node_modules
 before_install:
-  - 'npm install --global npm'
+  - sudo apt-get update
+  - sudo apt-get -y install python3
+  - sudo apt-get -y install python3-pip
+  - npm install --global npm
+install:
+  - sudo pip3 install -r engine/requirements.txt
 before_script:
-  - 'npm prune'
+  - npm prune
+script:
+  - npm test
+env:
+  global:
+    - NODE_ENV=dev
+    - PYTHONPATH=$(which python3)

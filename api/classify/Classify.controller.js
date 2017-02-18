@@ -1,9 +1,11 @@
 const { v4: uuid } = require('node-uuid')
 const PythonShell = require('python-shell')
 
+const config = require('../../config')
 const { createError } = require('../utils')
 
 const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
+const { pythonPath } = config
 
 module.exports = dependencies => {
   const { fs, os, path } = dependencies
@@ -26,6 +28,7 @@ module.exports = dependencies => {
             const message = `Unsupported Media Type (${AUTHORIZED_FORMATS.join(', ')})`
 
             abort(code, createError({ code, message }))
+            return
           }
 
           stream = fs.createWriteStream(path.join(os.tmpdir(), uuid()))
@@ -34,7 +37,7 @@ module.exports = dependencies => {
         }
 
         const options = {
-          pythonPath: '/usr/local/bin/python3',
+          pythonPath,
           args: ['--image_file', stream.path]
         }
         const pyshell = new PythonShell('engine/classify.py', options)

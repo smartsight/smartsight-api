@@ -9,6 +9,9 @@
     "lint": "./node_modules/.bin/standard",
     "test": "./node_modules/.bin/ava --verbose test/*.js"
   },
+  "engines": {
+    "node": ">=6"
+  },
   "repository": "smartsight/smartsight-api",
   "license": "MIT",
   "bugs": {
