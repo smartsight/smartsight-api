@@ -9,10 +9,9 @@ cache:
 before_install:
   - sudo apt-get update
   - sudo apt-get -y install python3
-  - sudo apt-get -y install python3-pip
   - npm install --global npm
 install:
-  - sudo pip3 install -r engine/requirements.txt
+  - sudo pip install -r engine/requirements.txt
 before_script:
   - npm prune
 script:
