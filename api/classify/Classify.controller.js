@@ -10,6 +10,35 @@ const { pythonPath } = config
 module.exports = dependencies => {
   const { fs, os, path } = dependencies
 
+  const getClassification = (imagePath, isFinal) => {
+    const options = {
+      pythonPath,
+      args: ['--image_file', imagePath]
+    }
+    const pyshell = new PythonShell('engine/classify.py', options)
+
+    return new Promise((resolve, reject) => {
+      pyshell
+        .on('error', reject)
+        .on('message', message => {
+          try {
+            // Check if the response is in the JSON format.
+            // The response is not in JSON if the server
+            // downloads the images data for the first time
+            JSON.parse(message)
+
+            resolve(message)
+          } catch (e) {
+            if (!isFinal) {
+              getClassification(imagePath, true)
+            } else {
+              reject(e)
+            }
+          }
+        })
+    })
+  }
+
   return {
     * classify ({ request, response }) {
       const { answer, abort } = response
@@ -37,17 +66,7 @@ module.exports = dependencies => {
         }
 
         try {
-          const options = {
-            pythonPath,
-            args: ['--image_file', stream.path]
-          }
-          const pyshell = new PythonShell('engine/classify.py', options)
-
-          const data = yield new Promise((resolve, reject) => {
-            pyshell
-              .on('error', reject)
-              .on('message', resolve)
-          })
+          const data = yield getClassification(stream.path)
 
           const result = {
             meta: {
