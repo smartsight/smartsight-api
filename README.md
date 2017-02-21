@@ -31,4 +31,4 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 
 ## License
 
-GNU © SmartSight
+GPL © SmartSight
