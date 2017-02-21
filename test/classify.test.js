@@ -4,7 +4,7 @@ const request = require('supertest-koa-agent')
 const app = require('../app')
 
 const api = request(app)
-const endpoint = '/classify'
+const endpoint = '/v1/classify'
 
 test.cb(`POST ${endpoint} with JPG image`, t => {
   api

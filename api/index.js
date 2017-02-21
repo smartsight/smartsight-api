@@ -1,7 +1,7 @@
 const router = require('koa-router')()
-const classify = require('./classify')
+const v1 = require('./v1')
 
 router
-  .use('/classify', classify.routes())
+  .use('/v1', v1.routes())
 
 module.exports = router

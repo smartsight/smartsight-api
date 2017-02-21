@@ -1,8 +1,8 @@
 const { v4: uuid } = require('node-uuid')
 const PythonShell = require('python-shell')
 
-const config = require('../../config')
-const { createError } = require('../utils')
+const config = require('../../../config')
+const { createError } = require('../../../helpers/response')
 
 const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
 const { pythonPath } = config
