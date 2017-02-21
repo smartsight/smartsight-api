@@ -1,8 +1,5 @@
 <h1 align="center">
-  <img src="https://github.com/smartsight/smartsight-art/raw/master/logo/logo-120@2x.png" alt="SmartSight API">
-  <br>
-  <br>
-  SmartSight API
+  <img src="https://github.com/smartsight/smartsight-art/raw/master/logo/variants/api/logo.png" alt="SmartSight API">
 </h1>
 
 > API for the SmartSight app
