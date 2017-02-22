@@ -1,11 +1,11 @@
 const { v4: uuid } = require('node-uuid')
 const PythonShell = require('python-shell')
 
-const config = require('../../../config')
+const { APIError } = require('../../../helpers/error')
 const { createError } = require('../../../helpers/response')
+const { pythonPath } = require('../../../config')
 
 const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
-const { pythonPath } = config
 
 module.exports = dependencies => {
   const { fs, os, path } = dependencies
@@ -50,19 +50,33 @@ module.exports = dependencies => {
 
         while ((part = yield parts)) {
           const { mime } = part
+
+          if (!mime) {
+            const code = 422
+            const message = 'The file is not specified.'
+
+            throw new APIError({ code, message })
+          }
+
           const [, format] = mime.split('/')
 
           if (!AUTHORIZED_FORMATS.includes(format)) {
             const code = 415
-            const message = `Unsupported Media Type (${AUTHORIZED_FORMATS.join(', ')})`
+            const message = `The media type should be one of the following: ${AUTHORIZED_FORMATS.join(', ')}.`
 
-            abort(code, createError({ code, message }))
-            return
+            throw new APIError({ code, message })
           }
 
           stream = fs.createWriteStream(path.join(os.tmpdir(), uuid()))
 
           part.pipe(stream)
+        }
+
+        if (!stream) {
+          const code = 422
+          const message = 'The file parameter is missing.'
+
+          throw new APIError({ code, message })
         }
 
         try {
@@ -78,19 +92,13 @@ module.exports = dependencies => {
 
           answer(result)
         } catch (e) {
-          // Unable to process the classification
-          //  - cannot run the script
-          //  - might be a corrupted file
-          const code = 415
-          const message = `Unsupported Media Type (${AUTHORIZED_FORMATS.join(', ')})`
+          const code = 422
+          const message = 'Unable to process the classification (the file might be corrupted).'
 
-          abort(code, createError({ code, message }))
+          throw new APIError({ code, message })
         }
       } catch (e) {
-        const code = 400
-        const message = `Bad request (expected format: ${AUTHORIZED_FORMATS.join(', ')})`
-
-        abort(code, createError({ code, message }))
+        abort(e.code, createError(e))
       }
     }
   }

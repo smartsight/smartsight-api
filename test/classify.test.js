@@ -6,7 +6,7 @@ const app = require('../app')
 const api = request(app)
 const endpoint = '/v1/classify'
 
-test.cb(`POST ${endpoint} with JPG image`, t => {
+test.cb(`POST ${endpoint} with JPG image returns 200`, t => {
   api
     .post(endpoint)
     .attach('file', 'test/fixture/pizza.jpg')
@@ -34,7 +34,21 @@ test.cb(`POST ${endpoint} with wrong image format returns 415`, t => {
     })
 })
 
-test.cb(`POST ${endpoint} returns valid JSON schema`, t => {
+test.cb(`POST ${endpoint} with unprocessable entity returns 422`, t => {
+  api
+    .post(endpoint)
+    .attach('file', 'test/fixture/corrupted-pizza.jpg')
+    .expect(422)
+    .end((err, res) => {
+      if (err) {
+        throw err
+      }
+
+      t.end()
+    })
+})
+
+test.cb(`POST ${endpoint} with image returns valid JSON schema`, t => {
   api
     .post(endpoint)
     .attach('file', 'test/fixture/pizza.jpg')
@@ -55,7 +69,7 @@ test.cb(`POST ${endpoint} returns valid JSON schema`, t => {
     })
 })
 
-test.cb(`POST ${endpoint} wrong format returns valid error JSON schema`, t => {
+test.cb(`POST ${endpoint} with wrong image format returns valid error JSON schema`, t => {
   api
     .post(endpoint)
     .attach('file', 'test/fixture/pizza.png')
@@ -66,7 +80,7 @@ test.cb(`POST ${endpoint} wrong format returns valid error JSON schema`, t => {
 
       const { error } = JSON.parse(res.text)
 
-      expect(error).to.include.keys('code', 'message')
+      expect(error).to.include.keys('code', 'message', 'url')
 
       t.end()
     })
