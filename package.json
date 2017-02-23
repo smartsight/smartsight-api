@@ -13,7 +13,7 @@
     "node": ">=6"
   },
   "repository": "smartsight/smartsight-api",
-  "license": "MIT",
+  "license": "GPL",
   "bugs": {
     "url": "https://github.com/smartsight/smartsight-api/issues"
   },
