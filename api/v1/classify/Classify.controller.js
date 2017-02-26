@@ -25,9 +25,9 @@ module.exports = dependencies => {
             // Check if the response is in the JSON format.
             // The response is not in JSON if the server
             // downloads the images data for the first time
-            JSON.parse(message)
+            const data = JSON.parse(message)
 
-            resolve(message)
+            resolve(data)
           } catch (e) {
             if (!isFinal) {
               resolve(getClassification(imagePath, true))

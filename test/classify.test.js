@@ -61,7 +61,7 @@ test.cb(`POST ${endpoint} with image returns valid JSON schema`, t => {
 
       expect(meta).to.include.keys('type', 'code')
 
-      JSON.parse(data).forEach(classification => {
+      data.forEach(classification => {
         expect(classification).to.include.keys('class', 'score')
       })
 
