@@ -30,7 +30,7 @@ module.exports = dependencies => {
             resolve(message)
           } catch (e) {
             if (!isFinal) {
-              getClassification(imagePath, true)
+              resolve(getClassification(imagePath, true))
             } else {
               reject(e)
             }
