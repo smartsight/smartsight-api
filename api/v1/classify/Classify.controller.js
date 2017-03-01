@@ -45,32 +45,29 @@ module.exports = dependencies => {
       const { parts } = request
 
       try {
-        let part
-        let stream
+        const part = yield parts
+        const { mime } = part
 
-        while ((part = yield parts)) {
-          const { mime } = part
+        if (!mime) {
+          const code = 422
+          const message = 'The file is not specified.'
 
-          if (!mime) {
-            const code = 422
-            const message = 'The file is not specified.'
-
-            throw new APIError({ code, message })
-          }
-
-          const [, format] = mime.split('/')
-
-          if (!AUTHORIZED_FORMATS.includes(format)) {
-            const code = 415
-            const message = `The media type should be one of the following: ${AUTHORIZED_FORMATS.join(', ')}.`
-
-            throw new APIError({ code, message })
-          }
-
-          stream = fs.createWriteStream(path.join(os.tmpdir(), uuid()))
-
-          part.pipe(stream)
+          throw new APIError({ code, message })
         }
+
+        const [, format] = mime.split('/')
+
+        if (!AUTHORIZED_FORMATS.includes(format)) {
+          const code = 415
+          const message = `The media type should be one of the following: ${AUTHORIZED_FORMATS.join(', ')}.`
+
+          throw new APIError({ code, message })
+        }
+
+        const filepath = path.join(os.tmpdir(), uuid())
+        const stream = fs.createWriteStream(filepath)
+
+        part.pipe(stream)
 
         if (!stream) {
           const code = 422
