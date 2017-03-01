@@ -95,7 +95,10 @@ module.exports = dependencies => {
           throw new APIError({ code, message })
         }
       } catch (e) {
-        abort(e.code, createError(e))
+        const code = e.code || 500
+        const message = e.message
+
+        abort(code, createError({ code, message }))
       }
     }
   }
