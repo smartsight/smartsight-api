@@ -44,6 +44,8 @@ module.exports = dependencies => {
       const { answer, abort } = response
       const { parts } = request
 
+      let filepath
+
       try {
         const part = yield parts
         const { mime } = part
@@ -64,7 +66,7 @@ module.exports = dependencies => {
           throw new APIError({ code, message })
         }
 
-        const filepath = path.join(os.tmpdir(), uuid())
+        filepath = path.join(os.tmpdir(), uuid())
         const stream = fs.createWriteStream(filepath)
 
         part.pipe(stream)
@@ -99,6 +101,15 @@ module.exports = dependencies => {
         const message = e.message
 
         abort(code, createError({ code, message }))
+      }
+
+      // Delete the picture once processed
+      if (filepath) {
+        fs.unlink(filepath, err => {
+          if (err) {
+            console.error(err)
+          }
+        })
       }
     }
   }
