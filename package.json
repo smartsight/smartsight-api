@@ -7,7 +7,7 @@
     "start": "node server",
     "dev": "./node_modules/.bin/nodemon server",
     "lint": "./node_modules/.bin/standard",
-    "test": "./node_modules/.bin/ava --verbose test/*.js"
+    "test": "npm run lint && ./node_modules/.bin/ava --verbose test/*.js"
   },
   "engines": {
     "node": ">=6"
