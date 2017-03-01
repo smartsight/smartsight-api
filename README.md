@@ -22,11 +22,23 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 * Set your Python 3 path to run the classification script with the correct interpreter: `export PYTHONPATH=$(which python3)`
 * Install Node dependencies: `npm install`
 * Run the server: `npm start`
-* Listening on: [http://localhost:3000](http://localhost:3000)
+* Listening by default on: [http://localhost:3000](http://localhost:3000)
 
-## Developers
+## Development setup
+
+### Environment
+
+| Variable         | Default   | Description                      |
+|------------------|-----------|----------------------------------|
+| `SM_SERVER_HOST` | "0.0.0.0" | Address of the server            |
+| `SM_SERVER_PORT` | 3000      | Port of the server               |
+| `PYTHONPATH`     | ""        | Path to the Python 3 interpreter |
+
+### Commands
 
 * Watch: `npm run dev`
+* Lint: `npm run lint`
+* Fix lint: `npm run lint:fix`
 * Test: `npm test`
 
 ## License
