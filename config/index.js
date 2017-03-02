@@ -30,7 +30,7 @@ $ export PYTHONPATH=$(which python3)
 }
 
 module.exports = {
-  host: process.env.SM_SERVER_HOST || env === 'dev' ? '0.0.0.0' : 'localhost',
+  host: process.env.SM_SERVER_HOST || '0.0.0.0',
   port: process.env.SM_SERVER_PORT || 3000,
   pythonPath,
   logger

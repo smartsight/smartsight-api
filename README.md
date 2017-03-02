@@ -22,7 +22,7 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 * Set your Python 3 path to run the classification script with the correct interpreter: `export PYTHONPATH=$(which python3)`
 * Install Node dependencies: `npm install`
 * Run the server: `npm start`
-* Listening by default on: [http://localhost:3000](http://localhost:3000)
+* Listening on: `http://0.0.0.0:3000`
 
 ## Development setup
 
