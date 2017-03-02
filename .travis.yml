@@ -7,11 +7,11 @@ cache:
     - $HOME/.npm
     - node_modules
 before_install:
-  - sudo apt-get update
+  - sudo apt-get -qq update
   - sudo apt-get -y install python3
   - npm install --global npm
 install:
-  - sudo pip install -r engine/requirements.txt
+  - pip install -r engine/requirements.txt
   - npm install
 before_script:
   - npm prune
@@ -19,5 +19,4 @@ script:
   - npm test
 env:
   global:
-    - NODE_ENV=dev
     - PYTHONPATH=$(which python3)
