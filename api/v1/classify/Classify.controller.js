@@ -96,7 +96,7 @@ module.exports = dependencies => {
         const message = e.message
 
         abort(code, createError({ code, message }))
-        logger.error(e, { code, message })
+        logger.info(message, { code, message })
       }
 
       // Delete the picture once processed
