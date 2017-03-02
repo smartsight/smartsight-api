@@ -11,12 +11,10 @@ before_install:
   - sudo apt-get -y install python3
   - npm install --global npm
 install:
-  - pip install -r engine/requirements.txt
+  - sudo pip install -r engine/requirements.txt
   - npm install
 before_script:
+  - export PYTHONPATH=$(which python3)
   - npm prune
 script:
   - npm test
-env:
-  global:
-    - PYTHONPATH=$(which python3)
