@@ -3,7 +3,7 @@ const PythonShell = require('python-shell')
 
 const { APIError } = require('../../../helpers/error')
 const { createError } = require('../../../helpers/response')
-const { pythonPath } = require('../../../config')
+const { logger, pythonPath } = require('../../../config')
 
 const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
 
@@ -28,11 +28,14 @@ module.exports = dependencies => {
             const data = JSON.parse(message)
 
             resolve(data)
+            logger.info('Classified a picture.', data)
           } catch (e) {
             if (!isFinal) {
               resolve(getClassification(imagePath, true))
+              logger.info('Downloaded the trained graph for the first time.')
             } else {
               reject(e)
+              logger.error('Could not process the classification.', e)
             }
           }
         })
@@ -101,13 +104,14 @@ module.exports = dependencies => {
         const message = e.message
 
         abort(code, createError({ code, message }))
+        logger.error(message, { code, message })
       }
 
       // Delete the picture once processed
       if (filepath) {
         fs.unlink(filepath, err => {
           if (err) {
-            console.error(err)
+            logger.error(err)
           }
         })
       }
