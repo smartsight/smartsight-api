@@ -51,14 +51,15 @@ module.exports = dependencies => {
 
       try {
         const part = yield parts
-        const { mime } = part
 
-        if (!mime) {
+        if (!part) {
           const code = 422
           const message = 'The file is not specified.'
 
           throw new APIError({ code, message })
         }
+
+        const { mime } = part
 
         const [, format] = mime.split('/')
 
