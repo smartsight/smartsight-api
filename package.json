@@ -4,11 +4,11 @@
   "description": "API for the SmartSight app",
   "main": "server.js",
   "scripts": {
-    "start": "node server",
-    "dev": "nodemon server",
+    "start": "NODE_ENV=prod node server",
+    "dev": "NODE_ENV=dev nodemon server",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test": "npm run lint && ava --verbose test/*.js"
+    "test": "npm run lint && NODE_ENV=test ava --verbose test/*.js"
   },
   "engines": {
     "node": ">=6"
