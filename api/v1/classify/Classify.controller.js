@@ -3,42 +3,24 @@ const PythonShell = require('python-shell')
 
 const { APIError } = require('../../../helpers/error')
 const { createError } = require('../../../helpers/response')
-const { logger, pythonPath } = require('../../../config')
+const { logger, modelDirectory, pythonPath } = require('../../../config')
 
 const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
 
 module.exports = dependencies => {
   const { fs, os, path } = dependencies
 
-  const getClassification = (imagePath, isFinal) => {
+  const getClassification = pathname => {
     const options = {
       pythonPath,
-      args: ['--image_file', imagePath]
+      args: ['--model_dir', modelDirectory, '--image_file', pathname]
     }
-    const pyshell = new PythonShell('engine/classify.py', options)
+    const classificationScript = new PythonShell('engine/classify.py', options)
 
     return new Promise((resolve, reject) => {
-      pyshell
+      classificationScript
         .on('error', reject)
-        .on('message', message => {
-          try {
-            // Check if the response is in the JSON format.
-            // The response is not in JSON if the server
-            // downloads the images data for the first time
-            const data = JSON.parse(message)
-
-            resolve(data)
-            logger.info('Classified a picture.', data)
-          } catch (e) {
-            if (!isFinal) {
-              resolve(getClassification(imagePath, true))
-              logger.info('Downloaded the trained graph for the first time.')
-            } else {
-              reject(e)
-              logger.error('Could not process the classification.', e)
-            }
-          }
-        })
+        .on('message', data => resolve(JSON.parse(data)))
     })
   }
 
@@ -82,6 +64,13 @@ module.exports = dependencies => {
           throw new APIError({ code, message })
         }
 
+        // Check if the model has already been downloaded
+        fs.stat(modelDirectory, err => {
+          if (err) {
+            logger.info('Downloading the model for the first time...')
+          }
+        })
+
         try {
           const data = yield getClassification(stream.path)
 
@@ -94,10 +83,12 @@ module.exports = dependencies => {
           }
 
           answer(result)
+          logger.info('Classified a picture.', data)
         } catch (e) {
           const code = 422
           const message = 'Unable to process the classification (the file might be corrupted).'
 
+          logger.error(e)
           throw new APIError({ code, message })
         }
       } catch (e) {
@@ -105,7 +96,7 @@ module.exports = dependencies => {
         const message = e.message
 
         abort(code, createError({ code, message }))
-        logger.error(message, { code, message })
+        logger.error(e, { code, message })
       }
 
       // Delete the picture once processed

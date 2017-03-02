@@ -28,11 +28,12 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 
 ### Environment
 
-| Variable         | Default   | Description                      |
-|------------------|-----------|----------------------------------|
-| `SM_SERVER_HOST` | "0.0.0.0" | Address of the server            |
-| `SM_SERVER_PORT` | 3000      | Port of the server               |
-| `PYTHONPATH`     | ""        | Path to the Python 3 interpreter |
+| Variable         | Default           | Description                                 |
+|------------------|-------------------|---------------------------------------------|
+| `SM_SERVER_HOST` | "0.0.0.0"         | Address of the server                       |
+| `SM_SERVER_PORT` | 3000              | Port of the server                          |
+| `SM_MODEL_DIR`   | "/tmp/smartsight" | Directory to store the classification graph |
+| `PYTHONPATH`     | ""                | Path to the Python 3 interpreter            |
 
 ### Commands
 

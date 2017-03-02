@@ -32,6 +32,7 @@ $ export PYTHONPATH=$(which python3)
 module.exports = {
   host: process.env.SM_SERVER_HOST || '0.0.0.0',
   port: process.env.SM_SERVER_PORT || 3000,
+  modelDirectory: process.env.SM_MODEL_DIR || '/tmp/smartsight',
   pythonPath,
   logger
 }
