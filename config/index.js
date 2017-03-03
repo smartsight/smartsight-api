@@ -20,7 +20,7 @@ const logger = new winston.Logger({
 })
 
 if (!pythonPath) {
-  logger.error(
+  console.error(
 `No Python interpreter specified
 Please set your default interpreter to Python 3:
 $ export PYTHONPATH=$(which python3)
