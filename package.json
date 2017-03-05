@@ -14,7 +14,7 @@
     "node": ">=6"
   },
   "repository": "smartsight/smartsight-api",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/smartsight/smartsight-api/issues"
   },
