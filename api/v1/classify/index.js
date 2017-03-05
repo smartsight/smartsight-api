@@ -9,10 +9,12 @@ const Controller = require('./Classify.controller')({
 router
   .post('/', function * (next) {
     const parts = parse(this)
+    const contentLength = this.request.header['content-length']
 
     yield Controller.classify({
       request: {
-        parts
+        parts,
+        contentLength
       },
       response: {
         answer: data => (this.body = data),

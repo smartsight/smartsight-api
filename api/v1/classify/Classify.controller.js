@@ -5,6 +5,8 @@ const { APIError } = require('../../../helpers/error')
 const { createError } = require('../../../helpers/response')
 const { logger, modelDirectory, pythonPath } = require('../../../config')
 
+const BIT_TO_BYTES = 1048576
+const MAX_FILE_SIZE = 10 * BIT_TO_BYTES
 const AUTHORIZED_FORMATS = ['jpg', 'jpeg']
 
 module.exports = dependencies => {
@@ -26,12 +28,19 @@ module.exports = dependencies => {
 
   return {
     * classify ({ request, response }) {
+      const { parts, contentLength } = request
       const { answer, abort } = response
-      const { parts } = request
 
       let filepath
 
       try {
+        if (contentLength > MAX_FILE_SIZE) {
+          const code = 413
+          const message = `The file is too big (maximum size allowed is ${MAX_FILE_SIZE / BIT_TO_BYTES} MB).`
+
+          throw new APIError({ code, message })
+        }
+
         const part = yield parts
 
         if (!part) {
@@ -42,7 +51,6 @@ module.exports = dependencies => {
         }
 
         const { mime } = part
-
         const [, format] = mime.split('/')
 
         if (!AUTHORIZED_FORMATS.includes(format)) {
