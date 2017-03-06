@@ -4,7 +4,7 @@
 
 > API for the SmartSight app
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE.md)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/feross/standard)
 [![Build Status](https://travis-ci.org/smartsight/smartsight-api.svg?branch=dev)](https://travis-ci.org/smartsight/smartsight-api)
 
