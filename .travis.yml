@@ -1,16 +1,12 @@
 language: node_js
 node_js:
   - 8
-  - 7
-  - 6
 cache:
   directories:
     - $HOME/.npm
     - node_modules
 env:
-  - SM_SERVER_HOST=0.0.0.0
-  - SM_SERVER_PORT=3000
-  - SM_MODEL_DIR=/tmp/smartsight
+  - SM_SERVER_HOST=0.0.0.0 SM_SERVER_PORT=3000 SM_MODEL_DIR=/tmp/smartsight
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get -y install python3
@@ -20,7 +16,7 @@ install:
   - npm install
 before_script:
   - export SM_PYTHON_PATH=$(which python)
-  - echo "SM_PYTHON_PATH: $SM_PYTHON_PATH"
+  - echo $SM_PYTHON_PATH
   - npm prune
 script:
   - npm test
