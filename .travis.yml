@@ -16,7 +16,6 @@ install:
   - npm install
 before_script:
   - export SM_PYTHON_PATH=$(which python)
-  - echo $SM_PYTHON_PATH
   - npm prune
 script:
   - npm test
