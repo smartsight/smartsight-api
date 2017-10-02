@@ -19,7 +19,10 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 * Clone the repo and its submodule: `git clone --recursive https://github.com/smartsight/smartsight-api.git`
 * [Install Python 3](https://www.python.org/downloads/)
 * Install Python requirements: `pip install -r engine/requirements.txt`
-* Set your Python 3 path to run the classification script with the correct interpreter: `export PYTHONPATH=$(which python3)`
+* Set your Python 3 path
+  * Duplicate the file `.env.sample`
+  * Rename it `.env`
+  * Change the `SM_PYTHON_PATH` value to your Python 3 interpreter (run `which python3` in the command line to know it)
 * Install Node dependencies: `npm install`
 * Run the server: `npm start`
 * Listening on: `http://0.0.0.0:3000`
@@ -33,7 +36,9 @@ Please refer to our [📚 Wiki documentation](https://github.com/smartsight/smar
 | `SM_SERVER_HOST` | "0.0.0.0"         | Address of the server                       |
 | `SM_SERVER_PORT` | 3000              | Port of the server                          |
 | `SM_MODEL_DIR`   | "/tmp/smartsight" | Directory to store the classification graph |
-| `PYTHONPATH`     | ""                | Path to the Python 3 interpreter            |
+| `SM_PYTHON_PATH` | ""                | Path to the Python 3 interpreter            |
+
+To change these environment variables, duplicate the file `.env.sample`, rename it `.env` and change the default values if necessary.
 
 ### Commands
 
