@@ -1,6 +1,7 @@
+require('dotenv').config()
 const winston = require('winston')
 
-const pythonPath = process.env.PYTHONPATH
+const pythonPath = process.env.SM_PYTHON_PATH
 
 const consoleLogger = new winston.transports.Console({
   name: 'log-console',
@@ -23,16 +24,16 @@ if (!pythonPath) {
   console.error(
 `No Python interpreter specified
 Please set your default interpreter to Python 3:
-$ export PYTHONPATH=$(which python3)
+$ export SM_PYTHON_PATH=$(which python3)
 `)
 
   process.exit(1)
 }
 
 module.exports = {
-  host: process.env.SM_SERVER_HOST || '0.0.0.0',
-  port: process.env.SM_SERVER_PORT || 3000,
-  modelDirectory: process.env.SM_MODEL_DIR || '/tmp/smartsight',
+  host: process.env.SM_SERVER_HOST,
+  port: process.env.SM_SERVER_PORT,
+  modelDirectory: process.env.SM_MODEL_DIR,
   pythonPath,
   logger
 }
